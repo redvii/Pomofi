@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lofi Timer - Focus with Peace</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-container">
+        <!-- Video backgrounds -->
+        <div class="background video-bg active" id="rayquaza-bg">
+            <video autoplay muted loop playsinline>
+                <source src="backgrounds/rayquaza-pokemon-emerald-pixel-sky-wallpaperwaves-com.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="background video-bg" id="totoro-bg">
+            <video autoplay muted loop playsinline>
+                <source src="backgrounds/totoro-with-telescope-enjoying-sunset-wallpaperwaves-com.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="background video-bg" id="lofi-girl-bg">
+            <video autoplay muted loop playsinline>
+                <source src="backgrounds/lofi-girl-study-wallpaperwaves-com.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <!-- Weather effect overlays -->
+        <div class="weather-overlay rain-overlay" id="rain-overlay" style="display: none;">
+            <div class="rain"></div>
+            <div class="rain"></div>
+            <div class="rain"></div>
+        </div>
+        
+        <div class="weather-overlay snow-overlay" id="snow-overlay" style="display: none;">
+            <div class="snow"></div>
+            <div class="snow"></div>
+            <div class="snow"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 class="app-title">Lofi Timer</h1>
+            <p class="subtitle">Focus with Peace</p>
+        </header>
+
+        <main class="timer-section">
+            <div class="timer-display">
+                <div class="time-circle">
+                    <div class="time-display" id="time-display">25:00</div>
+                    <div class="progress-ring">
+                        <svg class="progress-ring-svg" width="300" height="300">
+                            <circle class="progress-ring-circle-bg" cx="150" cy="150" r="140"></circle>
+                            <circle class="progress-ring-circle" cx="150" cy="150" r="140"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-controls">
+                <button class="control-btn start-btn" id="start-btn">
+                    <i class="fas fa-play"></i>
+                    <span>Start</span>
+                </button>
+                <button class="control-btn pause-btn" id="pause-btn" style="display: none;">
+                    <i class="fas fa-pause"></i>
+                    <span>Pause</span>
+                </button>
+                <button class="control-btn reset-btn" id="reset-btn">
+                    <i class="fas fa-redo"></i>
+                    <span>Reset</span>
+                </button>
+            </div>
+
+            <div class="session-info">
+                <div class="session-counter">
+                    <span id="session-count">0</span> / 4 sessions
+                </div>
+                <div class="mode-indicator" id="mode-indicator">Work Time</div>
+            </div>
+        </main>
+
+        <div class="background-selector">
+            <h3>Choose Your Background</h3>
+            <div class="bg-options">
+                <button class="bg-option active" data-bg="rayquaza-bg">
+                    <i class="fas fa-dragon"></i>
+                    <span>Rayquaza</span>
+                </button>
+                <button class="bg-option" data-bg="totoro-bg">
+                    <i class="fas fa-moon"></i>
+                    <span>Totoro</span>
+                </button>
+                <button class="bg-option" data-bg="lofi-girl-bg">
+                    <i class="fas fa-headphones"></i>
+                    <span>Lofi Girl</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="weather-selector">
+            <h3>Weather Effects</h3>
+            <div class="weather-options">
+                <button class="weather-option active" data-weather="none">
+                    <i class="fas fa-sun"></i>
+                    <span>Clear</span>
+                </button>
+                <button class="weather-option" data-weather="rain">
+                    <i class="fas fa-cloud-rain"></i>
+                    <span>Rain</span>
+                </button>
+                <button class="weather-option" data-weather="snow">
+                    <i class="fas fa-snowflake"></i>
+                    <span>Snow</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="music-controls">
+            <div class="music-info">
+                <i class="fas fa-music"></i>
+                <span id="music-title">Lofi Beats</span>
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-up" id="volume-icon"></i>
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element for lofi music -->
+    <audio id="lofi-audio" loop>
+        <!-- Audio source will be set by JavaScript -->
+        <!-- Fallback audio source -->
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lofi Timer - Focus with Peace</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-container">
+        <!-- Animated backgrounds -->
+        <div class="background pokemon-bg active" id="rain-bg">
+            <div class="rain"></div>
+            <div class="rain"></div>
+            <div class="rain"></div>
+        </div>
+        
+        <div class="background snow-bg" id="snow-bg">
+            <div class="snow"></div>
+            <div class="snow"></div>
+            <div class="snow"></div>
+        </div>
+        
+        <div class="background cafe-bg" id="cafe-bg">
+        <div class="background pokemon-bg" id="pokemon-bg">
+            <div class="pixel-stars"></div>
+            <div class="pixel-stars"></div>
+            <div class="pixel-stars"></div>
+            <div class="rayquaza-silhouette"></div>
+            <div class="pixel-clouds"></div>
+            <div class="pixel-clouds"></div>
+            <div class="pixel-clouds"></div>
+        </div>            <div class="cafe-window"></div>
+            <div class="steam"></div>
+            <div class="steam"></div>
+            <div class="steam"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 class="app-title">Lofi Timer</h1>
+            <p class="subtitle">Focus with Peace</p>
+        </header>
+
+        <main class="timer-section">
+            <div class="timer-display">
+                <div class="time-circle">
+                    <div class="time-display" id="time-display">25:00</div>
+                    <div class="progress-ring">
+                        <svg class="progress-ring-svg" width="300" height="300">
+                            <circle class="progress-ring-circle-bg" cx="150" cy="150" r="140"></circle>
+                            <circle class="progress-ring-circle" cx="150" cy="150" r="140"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-controls">
+                <button class="control-btn start-btn" id="start-btn">
+                    <i class="fas fa-play"></i>
+                    <span>Start</span>
+                </button>
+                <button class="control-btn pause-btn" id="pause-btn" style="display: none;">
+                    <i class="fas fa-pause"></i>
+                    <span>Pause</span>
+                </button>
+                <button class="control-btn reset-btn" id="reset-btn">
+                    <i class="fas fa-redo"></i>
+                    <span>Reset</span>
+                </button>
+            </div>
+
+            <div class="session-info">
+                <div class="session-counter">
+                    <span id="session-count">0</span> / 4 sessions
+                </div>
+                <div class="mode-indicator" id="mode-indicator">Work Time</div>
+            </div>
+        </main>
+
+        <div class="background-selector">
+            <h3>Choose Your Ambiance</h3>
+            <div class="bg-options">
+                <button class="bg-option active" data-bg="rain-bg">
+                    <i class="fas fa-cloud-rain"></i>
+                    <span>Rain</span>
+                </button>
+                <button class="bg-option" data-bg="snow-bg">
+                    <i class="fas fa-snowflake"></i>
+                    <span>Snow</span>
+                </button>
+                <button class="bg-option" data-bg="cafe-bg">
+                <button class="bg-option" data-bg="pokemon-bg">
+                    <i class="fas fa-dragon"></i>
+                    <span>Pokémon</span>
+                </button>                    <i class="fas fa-coffee"></i>
+                    <span>Café</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="music-controls">
+            <div class="music-info">
+                <i class="fas fa-music"></i>
+                <span id="music-title">Lofi Beats</span>
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-up" id="volume-icon"></i>
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element for lofi music -->
+    <audio id="lofi-audio" loop>
+        <!-- Audio source will be set by JavaScript -->
+        <!-- Fallback audio source -->
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
