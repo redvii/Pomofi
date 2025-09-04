@@ -11,9 +11,14 @@ class LofiTimer {
         this.circumference = 2 * Math.PI * 140; // For progress ring
         this.soundcloudWidget = null; // SoundCloud widget instance
         
+        // Focus tracking
+        this.totalFocusSessions = parseInt(localStorage.getItem('totalFocusSessions')) || 0;
+        this.totalFocusMinutes = parseInt(localStorage.getItem('totalFocusMinutes')) || 0;
+        
         this.initializeElements();
         this.setupEventListeners();
         this.updateDisplay();
+        this.updateStats();
         this.initializeSoundCloud();
     }
 
@@ -25,27 +30,59 @@ class LofiTimer {
         this.sessionCountElement = document.getElementById('session-count');
         this.modeIndicator = document.getElementById('mode-indicator');
         this.progressCircle = document.querySelector('.progress-ring-circle');
+        
+        // Stats elements
+        this.focusSessionsElement = document.getElementById('focus-sessions');
+        this.focusMinutesElement = document.getElementById('focus-minutes');
+        
+        // Modal elements
+        this.musicBtn = document.getElementById('music-btn');
+        this.backgroundsBtn = document.getElementById('backgrounds-btn');
+        this.weatherBtn = document.getElementById('weather-btn');
+        this.shareBtn = document.getElementById('share-btn');
+        
+        // Modal close buttons
+        this.musicClose = document.getElementById('music-close');
+        this.backgroundsClose = document.getElementById('backgrounds-close');
+        this.weatherClose = document.getElementById('weather-close');
     }
 
     setupEventListeners() {
         console.log("Setting up event listeners...");
-        console.log("Start button:", this.startBtn);
-        console.log("Pause button:", this.pauseBtn);
-        console.log("Reset button:", this.resetBtn);
         
+        // Timer controls
         this.startBtn.addEventListener('click', () => this.startTimer());
         this.pauseBtn.addEventListener('click', () => this.pauseTimer());
         this.resetBtn.addEventListener('click', () => this.resetTimer());
         
-        // Background switching
-        document.querySelectorAll('.bg-option').forEach(option => {
-            option.addEventListener('click', (e) => this.switchBackground(e.target.closest('.bg-option').dataset.bg));
+        // Modal controls
+        this.musicBtn.addEventListener('click', () => this.openModal('music-modal'));
+        this.backgroundsBtn.addEventListener('click', () => this.openModal('backgrounds-modal'));
+        this.weatherBtn.addEventListener('click', () => this.openModal('weather-modal'));
+        this.shareBtn.addEventListener('click', () => this.shareApp());
+        
+        // Modal close buttons
+        this.musicClose.addEventListener('click', () => this.closeModal('music-modal'));
+        this.backgroundsClose.addEventListener('click', () => this.closeModal('backgrounds-modal'));
+        this.weatherClose.addEventListener('click', () => this.closeModal('weather-modal'));
+        
+        // Background switching (in modal)
+        document.querySelectorAll('.bg-tile').forEach(tile => {
+            tile.addEventListener('click', (e) => this.switchBackground(e.target.closest('.bg-tile').dataset.bg));
         });
 
+        // Weather effect switching (in modal)
+        document.querySelectorAll('.weather-tile').forEach(tile => {
+            tile.addEventListener('click', (e) => this.switchWeather(e.target.closest('.weather-tile').dataset.weather));
+        });
         
-        // Weather effect switching
-        document.querySelectorAll('.weather-option').forEach(option => {
-            option.addEventListener('click', (e) => this.switchWeather(e.target.closest('.weather-option').dataset.weather));
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeModal(modal.id);
+                }
+            });
         });
     }
 
@@ -142,7 +179,11 @@ class LofiTimer {
         
         if (this.isWorkTime) {
             this.sessionCount++;
+            this.totalFocusSessions++;
+            this.totalFocusMinutes += 25; // 25 minutes per work session
             this.updateSessionCount();
+            this.updateStats();
+            this.saveStats();
             
             // Show completion notification
             this.showNotification('Work session completed! Take a break.');
@@ -230,12 +271,15 @@ class LofiTimer {
             });
         }
         
-        // Update button states
-        document.querySelectorAll('.bg-option').forEach(option => {
-            option.classList.remove('active');
+        // Update button states in modal
+        document.querySelectorAll('.bg-tile').forEach(tile => {
+            tile.classList.remove('active');
         });
         
         document.querySelector(`[data-bg="${backgroundId}"]`).classList.add('active');
+        
+        // Close modal after selection
+        this.closeModal('backgrounds-modal');
     }
 
     switchWeather(weatherType) {
@@ -250,12 +294,15 @@ class LofiTimer {
             document.getElementById(`${weatherType}-overlay`).style.display = 'block';
         }
         
-        // Update button states
-        document.querySelectorAll('.weather-option').forEach(option => {
-            option.classList.remove('active');
+        // Update button states in modal
+        document.querySelectorAll('.weather-tile').forEach(tile => {
+            tile.classList.remove('active');
         });
         
         document.querySelector(`[data-weather="${weatherType}"]`).classList.add('active');
+        
+        // Close modal after selection
+        this.closeModal('weather-modal');
     }
 
 
@@ -294,6 +341,61 @@ class LofiTimer {
                 document.body.removeChild(notification);
             }, 300);
         }, 3000);
+    }
+
+    // Modal handling methods
+    openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+        }
+    }
+
+    closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+
+    // Stats tracking methods
+    updateStats() {
+        if (this.focusSessionsElement) {
+            this.focusSessionsElement.textContent = this.totalFocusSessions;
+        }
+        if (this.focusMinutesElement) {
+            this.focusMinutesElement.textContent = this.totalFocusMinutes;
+        }
+    }
+
+    saveStats() {
+        localStorage.setItem('totalFocusSessions', this.totalFocusSessions.toString());
+        localStorage.setItem('totalFocusMinutes', this.totalFocusMinutes.toString());
+    }
+
+    // Share functionality
+    shareApp() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Lofi Timer - Focus with Peace',
+                text: 'Check out this amazing Pomodoro timer with lofi music and beautiful backgrounds!',
+                url: window.location.href
+            }).catch(err => {
+                console.log('Error sharing:', err);
+                this.fallbackShare();
+            });
+        } else {
+            this.fallbackShare();
+        }
+    }
+
+    fallbackShare() {
+        // Copy URL to clipboard
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            this.showNotification('Link copied to clipboard!');
+        }).catch(() => {
+            this.showNotification('Share feature not available');
+        });
     }
 }
 

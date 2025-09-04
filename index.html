@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lofi Timer - Focus with Peace</title>
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="background-container">
-        <!-- Video backgrounds -->
+        <!-- Video Backgrounds -->
         <div class="background video-bg active" id="rayquaza-bg">
             <video autoplay muted loop playsinline>
                 <source src="backgrounds/rayquaza-pokemon-emerald-pixel-sky-wallpaperwaves-com.mp4" type="video/mp4">
@@ -44,91 +44,184 @@
         </div>
     </div>
 
-    <div class="container">
-        <header>
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
             <h1 class="app-title">Lofi Timer</h1>
             <p class="subtitle">Focus with Peace</p>
         </header>
 
-        <main class="timer-section">
-            <div class="timer-display">
-                <div class="time-circle">
-                    <div class="time-display" id="time-display">25:00</div>
-                    <div class="progress-ring">
-                        <svg class="progress-ring-svg" width="300" height="300">
-                            <circle class="progress-ring-circle-bg" cx="150" cy="150" r="140"></circle>
-                            <circle class="progress-ring-circle" cx="150" cy="150" r="140"></circle>
-                        </svg>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Timer Display -->
+            <div class="timer-section">
+                <div class="timer-display">
+                    <div class="time-circle">
+                        <div class="time-display" id="time-display">25:00</div>
+                        <div class="progress-ring">
+                            <svg class="progress-ring-svg" width="300" height="300">
+                                <circle class="progress-ring-circle-bg" cx="150" cy="150" r="140"></circle>
+                                <circle class="progress-ring-circle" cx="150" cy="150" r="140"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="session-info">
+                    <div class="mode-indicator" id="mode-indicator">Work Time</div>
+                    <div class="session-counter">
+                        <span id="session-count">0</span> / 4 sessions
                     </div>
                 </div>
             </div>
 
-            <div class="timer-controls">
-                <button class="control-btn start-btn" id="start-btn">
-                    <i class="fas fa-play"></i>
-                    <span>Start</span>
-                </button>
-                <button class="control-btn pause-btn" id="pause-btn" style="display: none;">
-                    <i class="fas fa-pause"></i>
-                    <span>Pause</span>
-                </button>
-                <button class="control-btn reset-btn" id="reset-btn">
-                    <i class="fas fa-redo"></i>
-                    <span>Reset</span>
-                </button>
-            </div>
-
-            <div class="session-info">
-                <div class="session-counter">
-                    <span id="session-count">0</span> / 4 sessions
+            <!-- Stats Cards -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="focus-sessions">0</div>
+                        <div class="stat-label">Focus Sessions</div>
+                    </div>
                 </div>
-                <div class="mode-indicator" id="mode-indicator">Work Time</div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="focus-minutes">0</div>
+                        <div class="stat-label">Focus Minutes</div>
+                    </div>
+                </div>
             </div>
         </main>
 
-        <div class="background-selector">
-            <h3>Choose Your Background</h3>
-            <div class="bg-options">
-                <button class="bg-option active" data-bg="rayquaza-bg">
-                    <i class="fas fa-dragon"></i>
-                    <span>Rayquaza</span>
-                </button>
-                <button class="bg-option" data-bg="totoro-bg">
-                    <i class="fas fa-moon"></i>
-                    <span>Totoro</span>
-                </button>
-                <button class="bg-option" data-bg="lofi-girl-bg">
-                    <i class="fas fa-headphones"></i>
-                    <span>Lofi Girl</span>
+        <!-- Bottom Taskbar -->
+        <div class="taskbar">
+            <button class="taskbar-btn" id="start-btn">
+                <i class="fas fa-play"></i>
+                <span>Start</span>
+            </button>
+            <button class="taskbar-btn" id="pause-btn" style="display: none;">
+                <i class="fas fa-pause"></i>
+                <span>Pause</span>
+            </button>
+            <button class="taskbar-btn" id="reset-btn">
+                <i class="fas fa-redo"></i>
+                <span>Reset</span>
+            </button>
+            <button class="taskbar-btn" id="music-btn">
+                <i class="fas fa-music"></i>
+                <span>Music</span>
+            </button>
+            <button class="taskbar-btn" id="backgrounds-btn">
+                <i class="fas fa-image"></i>
+                <span>Backgrounds</span>
+            </button>
+            <button class="taskbar-btn" id="weather-btn">
+                <i class="fas fa-cloud-sun"></i>
+                <span>Weather</span>
+            </button>
+            <button class="taskbar-btn" id="share-btn">
+                <i class="fas fa-share"></i>
+                <span>Share</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Popup Modals -->
+    
+    <!-- Music Modal -->
+    <div class="modal" id="music-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pokémon Lo-Fi Playlist</h3>
+                <button class="modal-close" id="music-close">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-        </div>
-
-        <div class="weather-selector">
-            <h3>Weather Effects</h3>
-            <div class="weather-options">
-                <button class="weather-option active" data-weather="none">
-                    <i class="fas fa-sun"></i>
-                    <span>Clear</span>
-                </button>
-                <button class="weather-option" data-weather="rain">
-                    <i class="fas fa-cloud-rain"></i>
-                    <span>Rain</span>
-                </button>
-                <button class="weather-option" data-weather="snow">
-                    <i class="fas fa-snowflake"></i>
-                    <span>Snow</span>
-                </button>
+            <div class="modal-body">
+                <div class="soundcloud-player">
+                    <iframe id="soundcloud-widget" width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/718388073&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+                    <div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
+                        <a href="https://soundcloud.com/robotom01" title="RoboTom" target="_blank" style="color: #cccccc; text-decoration: none;">RoboTom</a> · 
+                        <a href="https://soundcloud.com/robotom01/sets/pokemon-lofi" title="Pokémon Lo-Fi" target="_blank" style="color: #cccccc; text-decoration: none;">Pokémon Lo-Fi</a>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="music-section">
-            <h3>Pokémon Lo-Fi Playlist</h3>
-            <div class="soundcloud-player">
-                <iframe id="soundcloud-widget" width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/718388073&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
-                <div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                    <a href="https://soundcloud.com/robotom01" title="RoboTom" target="_blank" style="color: #cccccc; text-decoration: none;">RoboTom</a> · 
-                    <a href="https://soundcloud.com/robotom01/sets/pokemon-lofi" title="Pokémon Lo-Fi" target="_blank" style="color: #cccccc; text-decoration: none;">Pokémon Lo-Fi</a>
+    <!-- Backgrounds Modal -->
+    <div class="modal" id="backgrounds-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choose Your Background</h3>
+                <button class="modal-close" id="backgrounds-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bg-grid">
+                    <button class="bg-tile active" data-bg="rayquaza-bg">
+                        <div class="bg-preview rayquaza-preview"></div>
+                        <div class="bg-info">
+                            <i class="fas fa-dragon"></i>
+                            <span>Rayquaza</span>
+                        </div>
+                    </button>
+                    <button class="bg-tile" data-bg="totoro-bg">
+                        <div class="bg-preview totoro-preview"></div>
+                        <div class="bg-info">
+                            <i class="fas fa-moon"></i>
+                            <span>Totoro</span>
+                        </div>
+                    </button>
+                    <button class="bg-tile" data-bg="lofi-girl-bg">
+                        <div class="bg-preview lofi-preview"></div>
+                        <div class="bg-info">
+                            <i class="fas fa-headphones"></i>
+                            <span>Lofi Girl</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weather Modal -->
+    <div class="modal" id="weather-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Weather Effects</h3>
+                <button class="modal-close" id="weather-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="weather-grid">
+                    <button class="weather-tile active" data-weather="none">
+                        <div class="weather-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <span>Clear</span>
+                    </button>
+                    <button class="weather-tile" data-weather="rain">
+                        <div class="weather-icon">
+                            <i class="fas fa-cloud-rain"></i>
+                        </div>
+                        <span>Rain</span>
+                    </button>
+                    <button class="weather-tile" data-weather="snow">
+                        <div class="weather-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <span>Snow</span>
+                    </button>
                 </div>
             </div>
         </div>
