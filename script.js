@@ -9,11 +9,12 @@ class LofiTimer {
         this.sessionCount = 0;
         this.timer = null;
         this.circumference = 2 * Math.PI * 140; // For progress ring
+        this.soundcloudWidget = null; // SoundCloud widget instance
         
         this.initializeElements();
         this.setupEventListeners();
         this.updateDisplay();
-        this.setupAudio();
+        this.initializeSoundCloud();
     }
 
     initializeElements() {
@@ -24,10 +25,6 @@ class LofiTimer {
         this.sessionCountElement = document.getElementById('session-count');
         this.modeIndicator = document.getElementById('mode-indicator');
         this.progressCircle = document.querySelector('.progress-ring-circle');
-        this.audio = document.getElementById('lofi-audio');
-        this.volumeSlider = document.getElementById('volume-slider');
-        this.volumeIcon = document.getElementById('volume-icon');
-        this.musicTitle = document.getElementById('music-title');
     }
 
     setupEventListeners() {
@@ -45,9 +42,6 @@ class LofiTimer {
             option.addEventListener('click', (e) => this.switchBackground(e.target.closest('.bg-option').dataset.bg));
         });
 
-        // Volume control
-        this.volumeSlider.addEventListener('input', (e) => this.setVolume(e.target.value));
-        this.volumeIcon.addEventListener('click', () => this.toggleMute());
         
         // Weather effect switching
         document.querySelectorAll('.weather-option').forEach(option => {
@@ -55,74 +49,45 @@ class LofiTimer {
         });
     }
 
-    setupAudio() {
-        // Set up lofi music with multiple sources for better compatibility
-        const audioSources = [
-            "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
-            "https://cdn.pixabay.com/download/audio/2022/10/21/audio_2b228b709b.mp3?filename=lofi-relax-travel-by-lofium-123560.mp3",
-            "https://cdn.pixabay.com/download/audio/2024/08/13/audio_cc7e9a45a5.mp3?filename=velvet-sky-lofi-ambient-231924.mp3"
-        ];
-
-        // Store audio sources for later use
-        this.audioSources = audioSources;
-        this.currentAudioIndex = 0;
-
-        // Create audio context for better audio handling
-        this.audioContext = null;
-        this.audioSource = null;
-        
-        // Set initial volume
-        this.audio.volume = this.volumeSlider.value / 100;
-        
-        // Set the first audio source
-        this.setAudioSource(this.currentAudioIndex);
-        
-        // Handle audio loading
-        this.audio.addEventListener('canplaythrough', () => {
-            console.log('Audio loaded successfully');
-        });
-        
-        this.audio.addEventListener('error', (e) => {
-            console.log('Audio error:', e);
-            // Try next audio source if current one fails
-            this.nextAudioSource();
-        });
-
-        // Handle audio ending to play next track
-        this.audio.addEventListener('ended', () => {
-            this.nextAudioSource();
-        });
-    }
-
-    setAudioSource(index) {
-        if (this.audioSources && this.audioSources[index]) {
-            this.audio.src = this.audioSources[index];
-            this.currentAudioIndex = index;
+    initializeSoundCloud() {
+        // Initialize SoundCloud Widget API
+        const iframe = document.getElementById('soundcloud-widget');
+        if (iframe && window.SC) {
+            this.soundcloudWidget = window.SC.Widget(iframe);
             
-            // Update music title
-            const trackNames = [
-                "Lofi Study",
-                "Lofi Relax Travel", 
-                "Velvet Sky Lofi"
-            ];
-            this.musicTitle.textContent = trackNames[index] || "Lofi Beats";
+            // Wait for widget to be ready
+            this.soundcloudWidget.bind(window.SC.Widget.Events.READY, () => {
+                console.log('SoundCloud widget is ready');
+                // Set initial volume (0-100)
+                this.soundcloudWidget.setVolume(50);
+            });
             
-            // Load the audio
-            this.audio.load();
+            // Bind events for better control
+            this.soundcloudWidget.bind(window.SC.Widget.Events.PLAY, () => {
+                console.log('SoundCloud started playing');
+            });
+            
+            this.soundcloudWidget.bind(window.SC.Widget.Events.PAUSE, () => {
+                console.log('SoundCloud paused');
+            });
+            
+            this.soundcloudWidget.bind(window.SC.Widget.Events.FINISH, () => {
+                console.log('SoundCloud track finished');
+            });
+        } else {
+            console.log('SoundCloud Widget API not available');
         }
     }
 
-    nextAudioSource() {
-        if (this.audioSources) {
-            this.currentAudioIndex = (this.currentAudioIndex + 1) % this.audioSources.length;
-            this.setAudioSource(this.currentAudioIndex);
-            
-            // If audio was playing, continue playing the new track
-            if (!this.audio.paused) {
-                this.audio.play().catch(e => {
-                    console.log('Audio play failed:', e);
-                });
-            }
+    playSoundCloud() {
+        if (this.soundcloudWidget) {
+            this.soundcloudWidget.play();
+        }
+    }
+
+    pauseSoundCloud() {
+        if (this.soundcloudWidget) {
+            this.soundcloudWidget.pause();
         }
     }
 
@@ -133,8 +98,8 @@ class LofiTimer {
             this.startBtn.style.display = 'none';
             this.pauseBtn.style.display = 'flex';
             
-            // Start playing lofi music
-            this.playMusic();
+            // Start playing SoundCloud playlist
+            this.playSoundCloud();
             
             this.timer = setInterval(() => {
                 this.currentTime--;
@@ -153,8 +118,8 @@ class LofiTimer {
             this.startBtn.style.display = 'flex';
             this.pauseBtn.style.display = 'none';
             
-            // Pause music
-            this.pauseMusic();
+            // Pause SoundCloud playlist
+            this.pauseSoundCloud();
             
             clearInterval(this.timer);
         }
@@ -168,6 +133,8 @@ class LofiTimer {
         this.updateDisplay();
         this.updateModeIndicator();
         this.updateSessionCount();
+        // Pause SoundCloud when resetting
+        this.pauseSoundCloud();
     }
 
     completeSession() {
@@ -291,44 +258,6 @@ class LofiTimer {
         document.querySelector(`[data-weather="${weatherType}"]`).classList.add('active');
     }
 
-    playMusic() {
-        if (this.audio.readyState >= 2) { // HAVE_CURRENT_DATA or higher
-            this.audio.play().catch(e => {
-                console.log('Audio play failed:', e);
-            });
-        }
-    }
-
-    pauseMusic() {
-        this.audio.pause();
-    }
-
-    setVolume(value) {
-        const volume = value / 100;
-        this.audio.volume = volume;
-        
-        // Update volume icon
-        if (volume === 0) {
-            this.volumeIcon.className = 'fas fa-volume-mute';
-        } else if (volume < 0.5) {
-            this.volumeIcon.className = 'fas fa-volume-down';
-        } else {
-            this.volumeIcon.className = 'fas fa-volume-up';
-        }
-    }
-
-    toggleMute() {
-        if (this.audio.volume > 0) {
-            this.lastVolume = this.audio.volume;
-            this.audio.volume = 0;
-            this.volumeSlider.value = 0;
-            this.volumeIcon.className = 'fas fa-volume-mute';
-        } else {
-            this.audio.volume = this.lastVolume || 0.5;
-            this.volumeSlider.value = this.audio.volume * 100;
-            this.setVolume(this.volumeSlider.value);
-        }
-    }
 
     showNotification(message) {
         // Create notification element
